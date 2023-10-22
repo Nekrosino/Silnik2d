@@ -12,7 +12,7 @@ public:
             Vertex(point1),
             Vertex(point2)
         };
-        cout << "Rysowanie linii";
+      //  cout << "Rysowanie linii";
         window.draw(line, 2, sf::Lines);
     }
 
@@ -45,18 +45,32 @@ public:
 class Engine {
 private:
     RenderWindow window;
+    bool isFullscreen = false;
     Clock clock;
     float frameTime = 1.0f / 60.0f; // Domyœlny czas trwania jednej klatki (1/60 sekundy)
+    Font font;
+    Text fpsText;
     Primitives primitives;
+
 
 public:
     Engine(int screenWidth, int screenHeight, const std::string& windowTitle) {
         window.create(VideoMode(screenWidth, screenHeight), windowTitle);
+
+        if (!font.loadFromFile("fonts/ARCADECLASSIC.ttf"))
+        {
+            cerr << "Nie mozna zaladowac czcionki" << endl;
+        }
+
+        fpsText.setFont(font);
+        fpsText.setCharacterSize(24);
+        fpsText.setFillColor(Color::White);
+        fpsText.setPosition(10, 10);
     }
 
     void run(int targetFPS) {
-        setFrameRate(targetFPS); // Ustaw iloœæ klatek na sekundê
-        
+      //  setFrameRate(targetFPS); // Ustaw iloœæ klatek na sekundê
+        window.setFramerateLimit(60);
         while (window.isOpen()) {
             Event event;
             while (window.pollEvent(event)) {
@@ -64,18 +78,48 @@ public:
                     window.close();
                 }
             }
-
-            float deltaTime = clock.restart().asSeconds();
+            Time elapsed = clock.restart();
+            float deltaTime = elapsed.asSeconds();
+           // float deltaTime = clock.restart().asSeconds();
 
             // Aktualizacja i renderowanie gry z uwzglêdnieniem deltaTime
             update(deltaTime);
             render();
+
+            float fps = 1.0f / elapsed.asSeconds();
+            fpsText.setString("FPS " + to_string(static_cast<int>(fps)));
         }
     }
 
     void update(float deltaTime)
-    {
+    {   
+        if (Keyboard::isKeyPressed(Keyboard::F1))
+        {
+            window.setFramerateLimit(30);
+        }
 
+        else if (Keyboard::isKeyPressed(Keyboard::F2))
+        {
+            window.setFramerateLimit(60);
+        }
+        else if (Keyboard::isKeyPressed(Keyboard::F3))
+        {
+            window.setFramerateLimit(144);
+        }
+        if (Keyboard::isKeyPressed(Keyboard::F))
+        {
+            isFullscreen = !isFullscreen;
+
+            if (isFullscreen)
+            {
+                window.create(sf::VideoMode(1920, 1080), "Aplikacja Fullscreen", sf::Style::Fullscreen);
+            }
+            else
+            {
+                window.create(sf::VideoMode(800, 600), "Icy Tower", sf::Style::Default);
+            }
+        }
+       
     }
 
     void render()
@@ -85,7 +129,6 @@ public:
         Vector2f point1(100, 100);
         Vector2f point2(200, 200);
         primitives.drawLine(window,point1,point2);
-
         Vector2f circleCenter(300, 300);
         float circleRadius = 50.0f;
         primitives.drawCircle(window, circleCenter, circleRadius);
@@ -98,8 +141,11 @@ public:
         Vector2f squareTopLeft(600, 600);
         float squareSize = 80.0f;
         primitives.drawSquare(window, squareTopLeft, squareSize);
+    
+        window.draw(fpsText);
 
         window.display();
+     
     }
 
     void setFrameRate(int targetFPS) {
