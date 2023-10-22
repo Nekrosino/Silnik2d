@@ -112,11 +112,14 @@ public:
 
             if (isFullscreen)
             {
+                
                 window.create(sf::VideoMode(1920, 1080), "Aplikacja Fullscreen", sf::Style::Fullscreen);
+                window.setFramerateLimit(60);
             }
             else
             {
                 window.create(sf::VideoMode(800, 600), "Icy Tower", sf::Style::Default);
+                window.setFramerateLimit(60);
             }
         }
        
@@ -138,7 +141,7 @@ public:
         Vector2f trianglePoint3(550, 450);
         primitives.drawTriangle(window, trianglePoint1, trianglePoint2, trianglePoint3);
 
-        Vector2f squareTopLeft(600, 600);
+        Vector2f squareTopLeft(400, 550);
         float squareSize = 80.0f;
         primitives.drawSquare(window, squareTopLeft, squareSize);
     
