@@ -1,60 +1,13 @@
-#include <SFML/Graphics.hpp>
-#include <iostream>
+
+#include "Engine.h"
+
 
 using namespace sf;
 using namespace std;
 
-class Primitives {
-public:
-    void drawLine(RenderWindow& window, Vector2f point1, Vector2f point2)
-    {   
-        Vertex line[] = {
-            Vertex(point1),
-            Vertex(point2)
-        };
-      //  cout << "Rysowanie linii";
-        window.draw(line, 2, sf::Lines);
-    }
 
-    void drawCircle(RenderWindow& window, Vector2f center, float radius) {
-        CircleShape circle(radius);
-        circle.setPosition(center);
-        circle.setFillColor(Color::Green);  //Kolor
-        window.draw(circle);
-    }
-
-    void drawSquare(RenderWindow& window, Vector2f topLeft, float size) {
-        RectangleShape square(Vector2f(size, size));
-        square.setPosition(topLeft);
-        square.setFillColor(Color::White); //Kolor
-        window.draw(square);
-    }
-
-
-    void drawTriangle(RenderWindow& window, Vector2f point1, Vector2f point2, Vector2f point3) {
-        ConvexShape triangle(3); //Ilosc wierzcholkow
-        triangle.setPoint(0, point1);
-        triangle.setPoint(1, point2);
-        triangle.setPoint(2, point3);
-        triangle.setFillColor(Color::Blue); // Kolor
-        window.draw(triangle);
-    }
-
-};
-
-class Engine {
-private:
-    RenderWindow window;
-    bool isFullscreen = false;
-    Clock clock;
-    float frameTime = 1.0f / 60.0f; // Domyœlny czas trwania jednej klatki (1/60 sekundy)
-    Font font;
-    Text fpsText;
-    Primitives primitives;
-
-
-public:
-    Engine(int screenWidth, int screenHeight, const std::string& windowTitle) {
+    Engine::Engine(int screenWidth, int screenHeight, const string& windowTitle) : primitives()
+    {
         window.create(VideoMode(screenWidth, screenHeight), windowTitle);
 
         if (!font.loadFromFile("fonts/ARCADECLASSIC.ttf"))
@@ -68,7 +21,7 @@ public:
         fpsText.setPosition(10, 10);
     }
 
-    void run(int targetFPS) {
+    void Engine::run(int targetFPS) {
       //  setFrameRate(targetFPS); // Ustaw iloœæ klatek na sekundê
         window.setFramerateLimit(60);
         while (window.isOpen()) {
@@ -91,7 +44,7 @@ public:
         }
     }
 
-    void update(float deltaTime)
+    void Engine::update(float deltaTime)
     {   
         if (Keyboard::isKeyPressed(Keyboard::F1))
         {
@@ -125,7 +78,7 @@ public:
        
     }
 
-    void render()
+    void Engine::render()
     {
         window.clear();
 
@@ -151,7 +104,7 @@ public:
      
     }
 
-    void setFrameRate(int targetFPS) {
+    void Engine::setFrameRate(int targetFPS) {
         if (targetFPS <= 0) {
             // Jeœli targetFPS jest nieprawid³owy, u¿yj domyœlnego FPS (60)
             targetFPS = 60;
@@ -159,10 +112,5 @@ public:
         frameTime = 1.0f / static_cast<float>(targetFPS);
     }
 
-};
 
-int main() {
-    Engine engine(800, 600, "Icy Tower");
-    engine.run(60); // Uruchom grê z 60 FPS
-    return 0;
-}
+
