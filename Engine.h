@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Primitives.h"
+#include "Player.h"
 
 using namespace sf;
 using namespace std;
@@ -26,6 +27,7 @@ private:
     Font font;
     Text fpsText;
     Primitives primitives;
+    Player player;
     
 };
 

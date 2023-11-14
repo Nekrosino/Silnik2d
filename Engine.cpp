@@ -6,7 +6,7 @@ using namespace sf;
 using namespace std;
 
 
-    Engine::Engine(int screenWidth, int screenHeight, const string& windowTitle) : primitives()
+    Engine::Engine(int screenWidth, int screenHeight, const string& windowTitle) : primitives(),player()
     {
         window.create(VideoMode(screenWidth, screenHeight), windowTitle);
 
@@ -75,6 +75,20 @@ using namespace std;
                 window.setFramerateLimit(60);
             }
         }
+        else if (Keyboard::isKeyPressed(Keyboard::Left))
+        {
+            player.moveLeft();
+        }
+        else if (Keyboard::isKeyPressed(Keyboard::Right))
+        {
+            player.moveRight();
+        }
+        else if (Keyboard::isKeyPressed(Keyboard::Up))
+        {
+            player.moveUp();
+        }
+        
+        player.updatePlayer();
        
     }
 
@@ -82,21 +96,22 @@ using namespace std;
     {
         window.clear();
 
-        Vector2f point1(100, 100);
-        Vector2f point2(200, 200);
-        primitives.drawLine(window,point1,point2);
-        Vector2f circleCenter(300, 300);
-        float circleRadius = 50.0f;
-        primitives.drawCircle(window, circleCenter, circleRadius);
+      //  Vector2f point1(100, 100);
+      //  Vector2f point2(200, 200);
+      //  primitives.drawLine(window,point1,point2);
+     //   Vector2f circleCenter(300, 300);
+     //   float circleRadius = 50.0f;
+     //   primitives.drawCircle(window, circleCenter, circleRadius);
 
-        Vector2f trianglePoint1(400, 400);
-        Vector2f trianglePoint2(500, 500);
-        Vector2f trianglePoint3(550, 450);
-        primitives.drawTriangle(window, trianglePoint1, trianglePoint2, trianglePoint3);
+     //   Vector2f trianglePoint1(400, 400);
+     //   Vector2f trianglePoint2(500, 500);
+     //   Vector2f trianglePoint3(550, 450);
+    //    primitives.drawTriangle(window, trianglePoint1, trianglePoint2, trianglePoint3);
 
-        Vector2f squareTopLeft(400, 550);
-        float squareSize = 80.0f;
-        primitives.drawSquare(window, squareTopLeft, squareSize);
+      // Vector2f squareTopLeft(500, 500);
+      //  float squareSize = 80.0f;
+      //  primitives.drawSquare(window, squareTopLeft, squareSize);
+        player.drawPlayer(window);
     
         window.draw(fpsText);
 
