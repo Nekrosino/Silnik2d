@@ -39,4 +39,9 @@
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\test.png">
+      <Filter>Pliki nagłówkowe</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

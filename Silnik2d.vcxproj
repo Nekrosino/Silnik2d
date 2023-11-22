@@ -143,6 +143,9 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Primitives.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\test.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

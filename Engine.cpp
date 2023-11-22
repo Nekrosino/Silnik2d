@@ -85,7 +85,7 @@ using namespace std;
         }
         else if (Keyboard::isKeyPressed(Keyboard::Up))
         {
-            player.moveUp();
+            player.moveUp(true);
         }
         
         player.updatePlayer();
