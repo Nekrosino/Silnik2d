@@ -1,25 +1,2 @@
-﻿  Engine.cpp
-  Player.cpp
-F:\Silnik2d\Player.cpp(22,18): warning C4244: "inicjowanie": konwersja z "T" do "int", możliwa utrata danych
-          with
-          [
-              T=float
-          ]
-F:\Silnik2d\Player.cpp(23,19): warning C4244: "inicjowanie": konwersja z "T" do "int", możliwa utrata danych
-          with
-          [
-              T=float
-          ]
-F:\Silnik2d\Player.cpp(25,45): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
-          with
-          [
-              T=float
-          ]
-F:\Silnik2d\Player.cpp(25,32): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
-          with
-          [
-              T=float
-          ]
-  main.cpp
-  Generowanie kodu...
+﻿  Player.cpp
   Silnik2d.vcxproj -> F:\Silnik2d\x64\Debug\Silnik2d.exe

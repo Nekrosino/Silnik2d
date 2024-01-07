@@ -1,32 +1,31 @@
-#pragma once
+// Player.h
 #ifndef PLAYER_H
 #define PLAYER_H
+
 #include <SFML/Graphics.hpp>
-using namespace sf;
-//Klasa gracza
-class Player
-{	
-private:
-	float position_x=400; //pozycja gracza w osi x
-	float position_y=400; //pozycja gracza w osi y
-	float speed = 0.0f;
-	float maxSpeedPlus=10;
-	float maxSpeedMinus=maxSpeedPlus*-1;
-	float jump = 0.0f;
-	bool jumpStatus;
-	RectangleShape collisionBox;
-	RectangleShape playerShape;
-	Sprite playerSprite;
-	Texture playerTexture;
+
+class Player {
 public:
+    Player(const std::string& windowTitle, int screenWidth, int screenHeight);
 
-	void moveLeft(); //funkcja poruszania gracza w lewo
-	void moveRight(); //funkcja poruszania gracza w prawo
-	void moveUp(bool isJumping);
-	void drawPlayer(RenderWindow& window);
-	void updatePlayer();
-	void collision();
+    void update(float deltaTime);
+    void render(sf::RenderWindow& window);
+    void moveLeft();
+    void moveRight();
+    void jump();
+
+private:
+    void updatePosition(float deltaTime);
+
+    sf::Texture texture;
+    sf::Sprite sprite;
+    float velocityX;
+    float velocityY;
+    bool isJumping;
+    float gravity;
+    float jumpHeight;
+    bool onGround;
+    int screenWidth;  // Dodana szerokoœæ ekranu
 };
-
 
 #endif

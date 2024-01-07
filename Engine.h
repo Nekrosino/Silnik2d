@@ -1,3 +1,4 @@
+// Engine.h
 #ifndef ENGINE_H
 #define ENGINE_H
 
@@ -10,25 +11,27 @@ using namespace sf;
 using namespace std;
 
 class Engine {
-
-
 public:
-    Engine(int screenWidth, int screenHeight, const string& windowTitle); //konstruktor
+    Engine(int screenWidth, int screenHeight, const string& windowTitle);
+
     void run(int targetFPS);
     void update(float deltaTime);
     void render();
     void setFrameRate(int targetFPS);
 
+    // Dodaj deklaracje funkcji obs³ugi klawiszy
+    void handleKeyPress(Keyboard::Key key);
+    void handleKeyRelease(Keyboard::Key key);
+
 private:
     RenderWindow window;
-    bool isFullscreen = false;
+    bool isFullscreen;
     Clock clock;
-    float frameTime = 1.0f / 60.0f; // Domyœlny czas trwania jednej klatki (1/60 sekundy)
+    float frameTime;
     Font font;
     Text fpsText;
     Primitives primitives;
     Player player;
-    
 };
 
 #endif

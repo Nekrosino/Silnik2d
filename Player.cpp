@@ -1,134 +1,62 @@
-
+// Player.cpp
 #include "Player.h"
+#include <iostream>
 
-using namespace sf;
-
-
-void Player::drawPlayer(RenderWindow& window) //Funkcja rysujaca gracza
-{	
-
-	if (!playerTexture.loadFromFile("textures/test.png"))
-	{
-		printf("error");
-	}
-	playerShape.setSize(Vector2f(100, 100));
-	playerShape.setPosition(position_x, position_y);
-	//playerShape.setFillColor(Color::Green);
-
-	
-	//playerSprite.setPosition(position_x, position_y);
-	//playerSprite.setTexture(playerTexture);
-	playerShape.setTexture(&playerTexture);
-	int spriteWidth = playerShape.getGlobalBounds().width;
-	int spriteHeight = playerShape.getGlobalBounds().height;
-
-	collisionBox.setSize(Vector2f(spriteWidth, spriteHeight));
-	collisionBox.setFillColor(Color::Transparent);  // Ustawienie przezroczystego koloru
-	collisionBox.setOutlineColor(Color::Red);  // Ustawienie koloru obramowania na czerwony
-	collisionBox.setOutlineThickness(1.0f);  // Ustawienie gruboœci obramowania
-	
-	//window.draw(playerShape);
-	
-	window.draw(playerShape);
-	window.draw(collisionBox);
-	
-}
-void Player::moveLeft() //Funkcja do poruszania postaci w lewo
+Player::Player(const std::string& windowTitle, int screenWidth, int screenHeight)
+    : velocityX(0.0f), velocityY(0.0f), isJumping(false), gravity(2000.0f), jumpHeight(400.0f), onGround(true),
+    screenWidth(screenWidth)
 {
-	speed -= 1;
-	
+    if (!texture.loadFromFile("textures/test.png")) {
+        std::cerr << "Nie mo¿na za³adowaæ tekstury postaci." << std::endl;
+    }
+
+    sprite.setTexture(texture);
+    sprite.setPosition(screenWidth / 2.0f, screenHeight - 50.0f);
 }
 
-void Player::moveRight() //Funkcja do poruszania postaci w prawo
-{
-	speed += 1;
+void Player::update(float deltaTime) {
+    updatePosition(deltaTime);
 }
 
-void Player::moveUp(bool isJumping)
-{	
-	if (isJumping==true && position_y >=400)
-	{
-		jump -= 1;
-		jumpStatus = true;
-	}
-
+void Player::render(sf::RenderWindow& window) {
+    window.draw(sprite);
 }
 
-
-
-void Player::updatePlayer() //Funkcja akutalizujaca gracza
-{
-	position_x += speed; //pozycji x dodajemy predkosc aby otrzymac efekt przyspieszenia
-	position_y += jump;
-	collision();
-	collisionBox.setPosition(position_x, position_y);
-	if (speed > maxSpeedPlus) //ograniczenie predkosci gdy przekroczy wartosc dodatnia
-	{
-		speed = 5;
-	}
-	else if (speed < maxSpeedMinus) //ograniczenie predkosci gdy przekroczy wartosc ujemna
-	{
-		speed = -5;
-	}
-
-	if (speed > 0.0f) //przyspieszenie gdy predkosc wieksza od 0
-	{
-		speed -= 0.1f;
-		if (speed < 0.0f)
-			speed = 0.0f;
-
-	}
-	else if (speed < 0.0f) //przyspieszenie gdy predkosc mniejsza od 0
-	{
-		speed += 0.1f;
-		if (speed > 0.0f)
-			speed = 0.0f;
-	}
-	if (jumpStatus)
-	{
-		if (jump > 8)
-		{
-			jump = 5;
-		}
-		else if (jump < -5)
-		{
-			jump = -5;
-		}
-
-		if (jump > 0.0f)
-		{
-			jump -= 0.1f;
-			if (jump < 0.0f)
-				jump = 0.0f;
-		}
-		else if (jump < 0.0f)
-		{
-			jump += 0.1f;
-			if (jump > 0.0f)
-				jump = 0.0f;
-		}
-	}
-	else
-	{
-		jump += 0.1f;
-		if (position_y <= 400)
-		{
-			jump = 0.0f;
-		}
-	}
-
+void Player::moveLeft() {
+    velocityX = -600.0f;
 }
 
+void Player::moveRight() {
+    velocityX = 600.0f;
+}
 
+void Player::jump() {
+    if (onGround) {
+        velocityY = -sqrt(2.0f * gravity * jumpHeight);
+        isJumping = true;
+        onGround = false;
+    }
+}
 
-void Player::collision()
-{
-	if (position_x >= 700)
-	{
-		speed = maxSpeedMinus;
-	}
-	else if (position_x <= 0)
-	{
-		speed = maxSpeedPlus;
-	}
+void Player::updatePosition(float deltaTime) {
+    sprite.move(velocityX * deltaTime, velocityY * deltaTime);
+
+    velocityY += gravity * deltaTime;
+
+    if (sprite.getPosition().y >= 480.0f) {
+        sprite.setPosition(sprite.getPosition().x, 480.0f);
+        velocityY = 0.0f;
+        isJumping = false;
+        onGround = true;
+    }
+
+    // Zatrzymaj postaæ, gdy nie wykonuje skoku i przestaje poruszaæ siê w bok
+    if (!isJumping && velocityX != 0.0f) {
+        velocityX *= 0.98f;  // Zastosuj wspó³czynnik tarcia mniejszy ni¿ 1.0
+    }
+
+    // Zmieniamy kierunek ruchu, gdy postaæ dotyka lewej lub prawej krawêdzi ekranu
+    if ((sprite.getPosition().x < 0.0f && velocityX < 0.0f) || (sprite.getPosition().x > screenWidth && velocityX > 0.0f)) {
+        velocityX = -velocityX;
+    }
 }
