@@ -1,2 +1,6 @@
-﻿  Block.cpp
+﻿  Engine.cpp
+  main.cpp
+F:\Silnik2d\main.cpp(9,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+  Player.cpp
+  Generowanie kodu...
   Silnik2d.vcxproj -> F:\Silnik2d\x64\Debug\Silnik2d.exe

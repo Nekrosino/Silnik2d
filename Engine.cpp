@@ -1,43 +1,40 @@
 // Engine.cpp
+
 #include "Engine.h"
 #include <iostream>
 
-using namespace sf;
-using namespace std;
-
-Engine::Engine(int screenWidth, int screenHeight, const string& windowTitle)
-    : primitives(), player(windowTitle, screenWidth, screenHeight), isFullscreen(false)
+Engine::Engine(int screenWidth, int screenHeight, const std::string& windowTitle)
+    : player(windowTitle, screenWidth, screenHeight), isFullscreen(false), blockSpawnInterval(2.0f)
 {
-    window.create(VideoMode(screenWidth, screenHeight), windowTitle);
+    window.create(sf::VideoMode(screenWidth, screenHeight), windowTitle);
 
-    if (!font.loadFromFile("fonts/ARCADECLASSIC.ttf"))
-    {
-        cerr << "Nie mozna zaladowac czcionki" << endl;
+    if (!font.loadFromFile("fonts/ARCADECLASSIC.ttf")) {
+        std::cerr << "Nie mo¿na za³adowaæ czcionki" << std::endl;
     }
 
     fpsText.setFont(font);
     fpsText.setCharacterSize(24);
-    fpsText.setFillColor(Color::White);
+    fpsText.setFillColor(sf::Color::White);
     fpsText.setPosition(10, 10);
 }
 
 void Engine::run(int targetFPS) {
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(targetFPS);
     while (window.isOpen()) {
-        Event event;
+        sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == Event::Closed) {
+            if (event.type == sf::Event::Closed) {
                 window.close();
             }
-            else if (event.type == Event::KeyPressed) {
+            else if (event.type == sf::Event::KeyPressed) {
                 handleKeyPress(event.key.code);
             }
-            else if (event.type == Event::KeyReleased) {
+            else if (event.type == sf::Event::KeyReleased) {
                 handleKeyRelease(event.key.code);
             }
         }
 
-        Time elapsed = clock.restart();
+        sf::Time elapsed = clock.restart();
         float deltaTime = elapsed.asSeconds();
 
         // Aktualizacja i renderowanie gry z uwzglêdnieniem deltaTime
@@ -45,81 +42,68 @@ void Engine::run(int targetFPS) {
         render();
 
         float fps = 1.0f / elapsed.asSeconds();
-        fpsText.setString("FPS " + to_string(static_cast<int>(fps)));
+        fpsText.setString("FPS " + std::to_string(static_cast<int>(fps)));
     }
 }
 
-void Engine::update(float deltaTime)
-{
-    if (Keyboard::isKeyPressed(Keyboard::F1))
-    {
-        window.setFramerateLimit(30);
-    }
-    else if (Keyboard::isKeyPressed(Keyboard::F2))
-    {
-        window.setFramerateLimit(60);
-    }
-    else if (Keyboard::isKeyPressed(Keyboard::F3))
-    {
-        window.setFramerateLimit(144);
+void Engine::update(float deltaTime) {
+    // Aktualizacja sterowania postaci¹ tylko jeœli nie koliduje z blokami
+    if (!isPlayerCollidingWithBlocks()) {
+        player.update(deltaTime);
     }
 
-    if (Keyboard::isKeyPressed(Keyboard::B)) {
-        blocks.emplace_back(100.0f, 400.0f, 50.0f, 20.0f, "textures/ice.png");
+    // Aktualizacja bloków
+    for (auto& block : blocks) {
+        block.update(deltaTime);
     }
 
-
-    if (Keyboard::isKeyPressed(Keyboard::F))
-    {
-        isFullscreen = !isFullscreen;
-
-        if (isFullscreen)
-        {
-            window.create(sf::VideoMode(1920, 1080), "Aplikacja Fullscreen", sf::Style::Fullscreen);
-            window.setFramerateLimit(60);
-        }
-        else
-        {
-            window.create(sf::VideoMode(800, 600), "Icy Tower", sf::Style::Default);
-            window.setFramerateLimit(60);
-        }
+    // Sprawdzenie kolizji
+    if (isPlayerCollidingWithBlocks()) {
+        // Obs³uga kolizji, na przyk³ad zatrzymanie postaci
+        player.moveLeft();
     }
 
-    // Aktualizacja sterowania postaci¹
-    player.update(deltaTime);
-    // Renderowanie bloków
-    for (const auto& block : blocks) {
-        block.render(window);
+    // Usuwanie bloków, które opad³y poza ekran
+    blocks.erase(std::remove_if(blocks.begin(), blocks.end(),
+        [](const Block& block) { return block.getY() > 600; }),
+        blocks.end());
+
+    // Dodawanie nowych bloków z okreœlonym interwa³em
+    if (blockSpawnClock.getElapsedTime().asSeconds() >= blockSpawnInterval) {
+        float randomX = static_cast<float>(rand() % (700));
+        Block block(randomX, 0.0f, 50.0f, 20.0f, "textures/ice.png");
+        blocks.push_back(block);
+        blockSpawnClock.restart();  // Zresetuj zegar po stworzeniu bloku
     }
 }
 
-void Engine::render()
-{
+void Engine::render() {
     window.clear();
+
     // Renderowanie bloków
     for (const auto& block : blocks) {
         block.render(window);
     }
 
-    player.render(window);  // Wywo³anie funkcji render() dla obiektu klasy Player
+    // Renderowanie postaci
+    player.render(window);
 
+    // Renderowanie tekstu FPS
     window.draw(fpsText);
+
     window.display();
 }
 
-// Dodaj implementacje funkcji handleKeyPress i handleKeyRelease
-void Engine::handleKeyPress(Keyboard::Key key)
-{
+void Engine::handleKeyPress(sf::Keyboard::Key key) {
     // Obs³uga naciœniêcia klawisza
-    switch (key)
-    {
-    case Keyboard::Left:
+    switch (key) {
+    case sf::Keyboard::Left:
         player.moveLeft();
         break;
-    case Keyboard::Right:
+    case sf::Keyboard::Right:
         player.moveRight();
         break;
-    case Keyboard::Up:
+    case sf::Keyboard::Up:
         player.jump();
         break;
     default:
@@ -127,8 +111,20 @@ void Engine::handleKeyPress(Keyboard::Key key)
     }
 }
 
-void Engine::handleKeyRelease(Keyboard::Key key)
-{
+void Engine::handleKeyRelease(sf::Keyboard::Key key) {
     // Obs³uga zwolnienia klawisza
     // Mo¿esz dodaæ dodatkow¹ logikê, jeœli potrzebujesz obs³ugi zwolnienia klawisza
+}
+
+bool Engine::isPlayerCollidingWithBlocks() {
+    for (const auto& block : blocks) {
+        // Sprawdzamy, czy prostok¹t postaci przecina siê z prostok¹tem bloku
+        if (player.getX() < block.getX() + block.getWidth() &&
+            player.getX() + player.getWidth() > block.getX() &&
+            player.getY() < block.getY() + block.getHeight() &&
+            player.getY() + player.getHeight() > block.getY()) {
+            return true;  // Koliduje
+        }
+    }
+    return false;  // Nie koliduje
 }
