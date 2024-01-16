@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Primitives.h"
 #include "Player.h"
+#include "Block.h"
 
 using namespace sf;
 using namespace std;
@@ -32,6 +33,7 @@ private:
     Text fpsText;
     Primitives primitives;
     Player player;
+    std::vector<Block> blocks; // Wektor bloków
 };
 
 #endif

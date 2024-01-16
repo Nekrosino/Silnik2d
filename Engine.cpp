@@ -64,6 +64,11 @@ void Engine::update(float deltaTime)
         window.setFramerateLimit(144);
     }
 
+    if (Keyboard::isKeyPressed(Keyboard::B)) {
+        blocks.emplace_back(100.0f, 400.0f, 50.0f, 20.0f, "textures/ice.png");
+    }
+
+
     if (Keyboard::isKeyPressed(Keyboard::F))
     {
         isFullscreen = !isFullscreen;
@@ -82,12 +87,22 @@ void Engine::update(float deltaTime)
 
     // Aktualizacja sterowania postaci¹
     player.update(deltaTime);
+    // Renderowanie bloków
+    for (const auto& block : blocks) {
+        block.render(window);
+    }
 }
 
 void Engine::render()
 {
     window.clear();
+    // Renderowanie bloków
+    for (const auto& block : blocks) {
+        block.render(window);
+    }
+
     player.render(window);  // Wywo³anie funkcji render() dla obiektu klasy Player
+
     window.draw(fpsText);
     window.display();
 }
