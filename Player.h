@@ -1,11 +1,22 @@
 // Player.h
-
-#pragma once
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #include <SFML/Graphics.hpp>
 
 class Player {
+public:
+    Player(const std::string& windowTitle, int screenWidth, int screenHeight);
+
+    void update(float deltaTime);
+    void render(sf::RenderWindow& window);
+    void moveLeft();
+    void moveRight();
+    void jump();
+
 private:
+    void updatePosition(float deltaTime);
+
     sf::Texture texture;
     sf::Sprite sprite;
     float velocityX;
@@ -14,22 +25,7 @@ private:
     float gravity;
     float jumpHeight;
     bool onGround;
-    int screenWidth;
-
-public:
-    Player(const std::string& windowTitle, int screenWidth, int screenHeight);
-
-    void update(float deltaTime);
-    void render(sf::RenderWindow& window);
-
-    void moveLeft();
-    void moveRight();
-    void jump();
-
-    float getX() const;
-    float getY() const;
-    float getWidth() const;
-    float getHeight() const;
-    bool getOnGround() const;
-    bool getIsJumping() const;
+    int screenWidth;  // Dodana szerokoœæ ekranu
 };
+
+#endif

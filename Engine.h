@@ -1,34 +1,44 @@
 // Engine.h
-
-#pragma once
+#ifndef ENGINE_H
+#define ENGINE_H
 
 #include <SFML/Graphics.hpp>
-#include <vector>
+#include <iostream>
+#include "Primitives.h"
 #include "Player.h"
 #include "Block.h"
 
+using namespace sf;
+using namespace std;
+
 class Engine {
-private:
-    sf::RenderWindow window;
-    sf::Font font;
-    sf::Text fpsText;
-    std::vector<Block> blocks;
-    Player player;
-    bool isFullscreen;
-
-    sf::Clock clock;
-    sf::Clock blockSpawnClock;
-    float blockSpawnInterval;
-
 public:
-    Engine(int screenWidth, int screenHeight, const std::string& windowTitle);
-    void run(int targetFPS);
+    Engine(int screenWidth, int screenHeight, const string& windowTitle);
 
-private:
+    void run(int targetFPS);
     void update(float deltaTime);
     void render();
-    void handleKeyPress(sf::Keyboard::Key key);
-    void handleKeyRelease(sf::Keyboard::Key key);
-    bool isPlayerCollidingWithBlocks();
+    void setFrameRate(int targetFPS);
+
+    // Dodaj deklaracje funkcji obs³ugi klawiszy
+    void handleKeyPress(Keyboard::Key key);
+    void handleKeyRelease(Keyboard::Key key);
+
+private:
+    RenderWindow window;
+    bool isFullscreen;
+    Clock clock;
+    float frameTime;
+    Font font;
+    Text fpsText;
+    Primitives primitives;
+    Player player;
+    Texture blockTexture;
+    std::vector<Block> blocks; // Wektor bloków
+    float blockSpawnInterval;
+    sf::Clock blockSpawnClock;
+
+
 };
 
+#endif
