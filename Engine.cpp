@@ -24,6 +24,8 @@ Engine::Engine(int screenWidth, int screenHeight, const string& windowTitle)
             cerr << "B³¹d ³adowania tekstury bloków" << endl;
         }
 
+
+
     fpsText.setFont(font);
     fpsText.setCharacterSize(24);
     fpsText.setFillColor(Color::White);
@@ -58,6 +60,7 @@ void Engine::run(int targetFPS) {
     }
 }
 
+
 void Engine::update(float deltaTime)
 {
     if (Keyboard::isKeyPressed(Keyboard::F1))
@@ -75,37 +78,25 @@ void Engine::update(float deltaTime)
 
     if (Keyboard::isKeyPressed(Keyboard::B)) {
         blocks.emplace_back(100.0f, 100.0f, 50.0f, 20.0f, blockTexture);
-        // blocks.emplace_back(400.0f, 400.0f, 50.0f, 20.0f, "textures/ice.png");
-       //  blocks.emplace_back(400.0f, 500.0f, 50.0f, 20.0f, "textures/ice.png");
-        // blocks.emplace_back(400.0f, 400.0f, 50.0f, 20.0f, "textures/ice.png");
-        // blocks.emplace_back(500.0f, 0.0f, 50.0f, 20.0f, "textures/ice.png");
-
     }
 
-    // Deklaracja zmiennej przechowuj¹cej maksymaln¹ liczbê bloków
     int maxLiczbaBlokow = 4;
-
-    // Deklaracja zmiennej przechowuj¹cej liczbê utworzonych bloków
     int liczbaUtworzonychBlokow = 0;
 
-    // Automatyczne tworzenie bloków co okreœlony interwa³ czasowy
     if (blockSpawnClock.getElapsedTime().asSeconds() >= blockSpawnInterval && liczbaUtworzonychBlokow < maxLiczbaBlokow) {
-        float randomX = static_cast<float>(rand() % 400 + 100);  // Losowa wartoœæ X w przedziale 100-500
+        float randomX = static_cast<float>(rand() % 400 + 100);
         blocks.emplace_back(randomX, 0.0f, 50.0f, 20.0f, blockTexture);
         liczbaUtworzonychBlokow++;
-        blockSpawnClock.restart();  // Zresetuj zegar po stworzeniu bloku
+        blockSpawnClock.restart();
     }
 
-    // Usuwanie bloków, które osi¹gnê³y punkt Y równy 600
     blocks.erase(std::remove_if(blocks.begin(), blocks.end(),
-        [](const Block& block) { return block.getY() >= 900; }),
+        [](const Block& block) { return block.getY() >= 600; }),
         blocks.end());
 
-    // Poruszanie bloków w dó³
     for (auto& block : blocks) {
-        block.moveDown(5.0f);  // Przesuñ blok w dó³ o 50 jednostek
+        block.moveDown(5.0f);
     }
-
 
     if (Keyboard::isKeyPressed(Keyboard::F))
     {
@@ -123,14 +114,24 @@ void Engine::update(float deltaTime)
         }
     }
 
-    // Aktualizacja sterowania postaci¹
     player.update(deltaTime);
-    // Renderowanie bloków
+
+    for (auto& block : blocks) {
+        if (player.isCollidingWith(block)) {
+            if (player.isMovingDown()) {
+                player.bounceUp();
+            }
+            // Dodaj inne dzia³ania zwi¹zane z kolizj¹, jeœli s¹ potrzebne
+            blocks.erase(std::remove(blocks.begin(), blocks.end(), block), blocks.end());
+        }
+    }
+
     for (const auto& block : blocks) {
         block.render(window);
     }
-    checkCollisions();
 }
+
+
 
 void Engine::render()
 {
@@ -139,6 +140,8 @@ void Engine::render()
     for (const auto& block : blocks) {
         block.render(window);
     }
+
+    window.draw(backgroundSprite);
 
     player.render(window);  // Wywo³anie funkcji render() dla obiektu klasy Player
 
@@ -170,25 +173,4 @@ void Engine::handleKeyRelease(Keyboard::Key key)
 {
     // Obs³uga zwolnienia klawisza
     // Mo¿esz dodaæ dodatkow¹ logikê, jeœli potrzebujesz obs³ugi zwolnienia klawisza
-}
-
-
-void Engine::checkCollisions() {
-    sf::FloatRect playerBounds = player.getBoundingBox();
-
-    for (auto& block : blocks) {
-        sf::FloatRect blockBounds = block.getBoundingBox();
-
-        if (playerBounds.intersects(blockBounds)) {
-            // Kolizja! Tutaj mo¿esz zaimplementowaæ dowoln¹ logikê zwi¹zan¹ z kolizj¹.
-
-            // Na przyk³ad, przesuñ gracza w górê o pewn¹ wartoœæ
-            float displacement = 50.0f;
-
-           // player.moveUp(displacement);
-            player.moveUp();
-
-            // Mo¿esz tak¿e zastosowaæ inne efekty, np. zmniejszyæ ¿ycie gracza, itp.
-        }
-    }
 }
