@@ -25,3 +25,16 @@ void Block::moveDown(float distance) {
 void Block::update(float deltaTime) {
     // Aktualizacja logiki bloku, jeœli to konieczne
 }
+
+sf::FloatRect Block::getGlobalBounds() const {
+    return sprite.getGlobalBounds();
+}
+
+const sf::Sprite& Block::getSprite() const {
+    return sprite;
+}
+
+bool Block::operator==(const Block& other) const {
+    // Porównaj bloki na podstawie wspó³rzêdnej Y
+    return getY() == other.getY();
+}

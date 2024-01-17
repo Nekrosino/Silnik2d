@@ -38,6 +38,21 @@ void Player::jump() {
     }
 }
 
+void Player::bounceUp() {
+    velocityY = -sqrt(2.0f * gravity * jumpHeight);
+    isJumping = true;
+    onGround = false;
+}
+
+bool Player::isCollidingWith(const Block& block) const {
+    return sprite.getGlobalBounds().intersects(block.getSprite().getGlobalBounds());
+    // Za³ó¿my, ¿e Block posiada getSprite() zwracaj¹c¹ sf::Sprite w klasie Block
+}
+
+bool Player::isMovingDown() const {
+    return velocityY > 0.0f;
+}
+
 void Player::updatePosition(float deltaTime) {
     sprite.move(velocityX * deltaTime, velocityY * deltaTime);
 

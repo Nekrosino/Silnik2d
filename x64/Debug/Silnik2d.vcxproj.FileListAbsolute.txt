@@ -1,2 +1,3 @@
 F:\Silnik2d\x64\Debug\Silnik2d.exe
 F:\Silnik2d-b10e574484afe9fb28b334dd745220bc52bdf7f2\x64\Debug\Silnik2d.exe
+E:\_Studia\Kielce\ROK 3\SEMESTR 5\Grafika_Komputerowa\Projekt\x64\Debug\Silnik2d.exe
