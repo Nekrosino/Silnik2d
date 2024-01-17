@@ -1,6 +1,18 @@
 ﻿  Block.cpp
   Engine.cpp
-  main.cpp
   Player.cpp
+E:\_Studia\Kielce\ROK 3\SEMESTR 5\Grafika_Komputerowa\Projekt\Engine.cpp(120,20): error C2039: „isCollidingWith”: nie jest składową elementu „Player”
+  E:\_Studia\Kielce\ROK 3\SEMESTR 5\Grafika_Komputerowa\Projekt\Player.h(7,7):
+  zobacz deklarację „Player”
+  
+E:\_Studia\Kielce\ROK 3\SEMESTR 5\Grafika_Komputerowa\Projekt\Engine.cpp(121,24): error C2039: „isMovingDown”: nie jest składową elementu „Player”
+  E:\_Studia\Kielce\ROK 3\SEMESTR 5\Grafika_Komputerowa\Projekt\Player.h(7,7):
+  zobacz deklarację „Player”
+  
+E:\_Studia\Kielce\ROK 3\SEMESTR 5\Grafika_Komputerowa\Projekt\Engine.cpp(122,24): error C2039: „bounceUp”: nie jest składową elementu „Player”
+  E:\_Studia\Kielce\ROK 3\SEMESTR 5\Grafika_Komputerowa\Projekt\Player.h(7,7):
+  zobacz deklarację „Player”
+  
+E:\_Studia\Kielce\ROK 3\SEMESTR 5\Grafika_Komputerowa\Projekt\Engine.cpp(144,17): error C2065: "backgroundSprite": niezadeklarowany identyfikator
+  main.cpp
   Generowanie kodu...
-  Silnik2d.vcxproj -> E:\_Studia\Kielce\ROK 3\SEMESTR 5\Grafika_Komputerowa\Projekt\x64\Debug\Silnik2d.exe
