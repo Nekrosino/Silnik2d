@@ -19,6 +19,7 @@ public:
     void update(float deltaTime);
     void render();
     void setFrameRate(int targetFPS);
+    void checkCollisions();
 
     // Dodaj deklaracje funkcji obs³ugi klawiszy
     void handleKeyPress(Keyboard::Key key);

@@ -6,7 +6,7 @@
 
 
 int main() {
-    Engine engine(800, 600, "Icy Tower");
+    Engine engine(1200, 900, "Icy Tower");
     // Inicjalizacja generatora liczb pseudolosowych
     std::srand(static_cast<unsigned>(std::time(nullptr)));
     engine.run(60); // Uruchom grê z 60 FPS

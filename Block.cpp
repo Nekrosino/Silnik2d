@@ -1,5 +1,6 @@
 // Block.cpp
 #include "Block.h"
+#include "Player.h"
 #include <iostream>
 
 Block::Block(float x, float y, float width, float height, sf::Texture& texture)
@@ -26,15 +27,6 @@ void Block::update(float deltaTime) {
     // Aktualizacja logiki bloku, jeœli to konieczne
 }
 
-sf::FloatRect Block::getGlobalBounds() const {
+sf::FloatRect Block::getBoundingBox() const {
     return sprite.getGlobalBounds();
-}
-
-const sf::Sprite& Block::getSprite() const {
-    return sprite;
-}
-
-bool Block::operator==(const Block& other) const {
-    // Porównaj bloki na podstawie wspó³rzêdnej Y
-    return getY() == other.getY();
 }

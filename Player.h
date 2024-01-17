@@ -3,7 +3,6 @@
 #define PLAYER_H
 
 #include <SFML/Graphics.hpp>
-#include "Block.h"  // Dodaj nag³ówek z klas¹ Block
 
 class Player {
 public:
@@ -14,11 +13,8 @@ public:
     void moveLeft();
     void moveRight();
     void jump();
-
-    // Nowo dodane metody
-    void bounceUp();
-    bool isCollidingWith(const Block& block) const;
-    bool isMovingDown() const;
+    void moveUp();
+    sf::FloatRect getBoundingBox() const;
 
 private:
     void updatePosition(float deltaTime);
@@ -32,6 +28,7 @@ private:
     float jumpHeight;
     bool onGround;
     int screenWidth;  // Dodana szerokoœæ ekranu
+
 };
 
 #endif

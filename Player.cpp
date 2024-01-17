@@ -11,7 +11,8 @@ Player::Player(const std::string& windowTitle, int screenWidth, int screenHeight
     }
 
     sprite.setTexture(texture);
-    sprite.setPosition(screenWidth / 2.0f, screenHeight - 50.0f);
+    sprite.setPosition(screenWidth / 2.0f, 550);
+
 }
 
 void Player::update(float deltaTime) {
@@ -30,6 +31,11 @@ void Player::moveRight() {
     velocityX = 600.0f;
 }
 
+void Player::moveUp()
+{
+    velocityY = -sqrt(2.0f * gravity * jumpHeight-300);
+}
+
 void Player::jump() {
     if (onGround) {
         velocityY = -sqrt(2.0f * gravity * jumpHeight);
@@ -38,28 +44,14 @@ void Player::jump() {
     }
 }
 
-void Player::bounceUp() {
-    velocityY = -sqrt(2.0f * gravity * jumpHeight);
-    isJumping = true;
-    onGround = false;
-}
-
-bool Player::isCollidingWith(const Block& block) const {
-    return sprite.getGlobalBounds().intersects(block.getSprite().getGlobalBounds());
-    // Za³ó¿my, ¿e Block posiada getSprite() zwracaj¹c¹ sf::Sprite w klasie Block
-}
-
-bool Player::isMovingDown() const {
-    return velocityY > 0.0f;
-}
 
 void Player::updatePosition(float deltaTime) {
     sprite.move(velocityX * deltaTime, velocityY * deltaTime);
 
     velocityY += gravity * deltaTime;
 
-    if (sprite.getPosition().y >= 480.0f) {
-        sprite.setPosition(sprite.getPosition().x, 480.0f);
+    if (sprite.getPosition().y >= 700) {
+        sprite.setPosition(sprite.getPosition().x, 700.0f);
         velocityY = 0.0f;
         isJumping = false;
         onGround = true;
@@ -71,7 +63,11 @@ void Player::updatePosition(float deltaTime) {
     }
 
     // Zmieniamy kierunek ruchu, gdy postaæ dotyka lewej lub prawej krawêdzi ekranu
-    if ((sprite.getPosition().x < 0.0f && velocityX < 0.0f) || (sprite.getPosition().x > screenWidth && velocityX > 0.0f)) {
+    if ((sprite.getPosition().x < 0.0f && velocityX < 0.0f) || (sprite.getPosition().x > screenWidth-100 && velocityX > 0.0f)) {
         velocityX = -velocityX;
     }
+}
+
+sf::FloatRect Player::getBoundingBox() const {
+    return sprite.getGlobalBounds();
 }
