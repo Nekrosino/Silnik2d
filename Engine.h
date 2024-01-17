@@ -33,6 +33,10 @@ private:
     Font font;
     Text fpsText;
     Primitives primitives;
+    Texture backgroundTexture;
+    Texture mainBlockTexture;
+    sf::Sprite main_block;
+    sf::Sprite background;
     Player player;
     Texture blockTexture;
     std::vector<Block> blocks; // Wektor bloków
